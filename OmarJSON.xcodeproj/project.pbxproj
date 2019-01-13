@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		07723DE021E99E8800745205 /* JSONParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07723DDF21E99E8800745205 /* JSONParser.swift */; };
 		07D0723421E822FE00F6A216 /* JSONResponse2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D0723321E822FE00F6A216 /* JSONResponse2.swift */; };
 		07D0723921E826E600F6A216 /* ProductCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D0723821E826E600F6A216 /* ProductCollectionViewCell.swift */; };
 		07D0723B21E8271200F6A216 /* ProductViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D0723A21E8271200F6A216 /* ProductViewController.swift */; };
@@ -22,7 +21,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		07723DDF21E99E8800745205 /* JSONParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONParser.swift; sourceTree = "<group>"; };
 		07D0723321E822FE00F6A216 /* JSONResponse2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONResponse2.swift; sourceTree = "<group>"; };
 		07D0723821E826E600F6A216 /* ProductCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCollectionViewCell.swift; sourceTree = "<group>"; };
 		07D0723A21E8271200F6A216 /* ProductViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewController.swift; sourceTree = "<group>"; };
@@ -58,7 +56,6 @@
 				623C8CA621E7052D000D3154 /* ViewController.swift */,
 				623C8CB621E7053E000D3154 /* JSONResponse.swift */,
 				623C8CB821E8196D000D3154 /* CustomCollectionViewCell.swift */,
-				07723DDF21E99E8800745205 /* JSONParser.swift */,
 			);
 			path = Collections;
 			sourceTree = "<group>";
@@ -251,7 +248,6 @@
 			files = (
 				07D0723421E822FE00F6A216 /* JSONResponse2.swift in Sources */,
 				623C8CB721E7053E000D3154 /* JSONResponse.swift in Sources */,
-				07723DE021E99E8800745205 /* JSONParser.swift in Sources */,
 				07D0723D21E836E100F6A216 /* JSONResponse3.swift in Sources */,
 				623C8CA721E7052D000D3154 /* ViewController.swift in Sources */,
 				07D0723B21E8271200F6A216 /* ProductViewController.swift in Sources */,
