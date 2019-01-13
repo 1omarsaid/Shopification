@@ -10,18 +10,26 @@ import UIKit
 
 class ProductViewController: UIViewController {
 
+    //Collect ID used query the last URL
     var collectID: Int!
+    //The collection name that will be used in the collection view cells
     var collectName: String!
+    //Collection image url that will be used to display in the collection view cells
     var collectionImage: String!
+    //Body HTML will talk about the description of the collection
     var bodyHTML: String!
+    //This is the image that will be in the collection view cells representing the collection's imge
     var imageProduct: UIImage!
+    
     //This will be used to collect the id's for the products
     var collects = [Collect]()
+    //Creating a temporary string that will be used to obtain all the collec ID's
     var collectionCollects = ""
     //This will have the products
     var products = [Product]()
     //This will have the variants
     var varients = [Variant]()
+    //The cell ID for the cells
     let cellId = "cellid"
     
     
@@ -30,21 +38,22 @@ class ProductViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         //Setting up the navigationBar
-//        setNavigationBar()
         setupNavController()
-        //Using string interpolation for the URL
+        //Setting up the user interface
         setupUI()
-        
+        //Setting up the background color to match the main view
         view.backgroundColor = #colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1)
+        //Using string intorpelation to get the new JSON data
         let jsonURL = "https://shopicruit.myshopify.com/admin/collects.json?collection_id=\((collectID)!)&page=1&access_token=c32313df0d0ef512ca64d5b336a0d7c6"
         
         
-        //We need to first fetch the collects
+        //WInitially we need to fetch the collects to build the final URL
         fetchJSON(url: jsonURL) { (response, error) in
             guard let item = response?.collects else { return }
             self.collects = item
+            //Creating a for loop that will go through every collect and add the tup
             for i in self.collects {
-                //This will put all the id's together
+                //This will put all the id's together seperated by comma
                 self.collectionCollects.append(",")
                 self.collectionCollects.append(String(i.productID))
             }
@@ -54,15 +63,15 @@ class ProductViewController: UIViewController {
 
             //This is the productURL that we will use to retrieve the products and put them in the collectionView
             let productURL = "https://shopicruit.myshopify.com/admin/products.json?ids=\(self.collectionCollects)&page=1&access_token=c32313df0d0ef512ca64d5b336a0d7c6"
+            
+            //This will detch the products with the new URL
             self.fetchProducts(url: productURL) { (response, error) in
                 guard let item = response?.products else {return}
                 self.products = item
                 self.collectionView.reloadData()
-
-                self.collectionView.reloadData()
             }
-          
         }
+        
         //Using the URL to get the image
         let url = URL(string: "\((collectionImage)!)")
         
@@ -81,7 +90,10 @@ class ProductViewController: UIViewController {
                 }
             }
             catch {
-                // error
+                //Specifying Alert to show user that image can not be downloaded at this time
+                let alert = UIAlertController(title: "Error", message:"Image can not be loaded at this time", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
             }
         }
         
@@ -91,20 +103,25 @@ class ProductViewController: UIViewController {
     
     //This function is used to set up the card view that displays the collection's html as well as its image and title
     func setupExtraComponent() {
+        //Creating the detailed view that will be at the top of the screen
         let detailView = UIView()
+        //Resizing the view if the collection's text is empty of has data in it
         if bodyHTML == "" {
             detailView.frame = CGRect(x: 0, y: UIScreen.main.bounds.height * 0.12, width: UIScreen.main.bounds.width * 0.9, height: UIScreen.main.bounds.height * 0.1)
         }else {
             detailView.frame = CGRect(x: 0, y: UIScreen.main.bounds.height * 0.12, width: UIScreen.main.bounds.width * 0.9, height: UIScreen.main.bounds.height * 0.15)
-            
         }
-        detailView.backgroundColor = .white
-        detailView.layer.cornerRadius = 40
-        detailView.center.x = view.center.x
         
+        //Specifying the detail view to be white to match the current user interface layout
+        detailView.backgroundColor = .white
+        //creating a corner radius to make it look better
+        detailView.layer.cornerRadius = 40
+        //Centering the collection view with respect to the main view
+        detailView.center.x = view.center.x
+        //Add the detailed view to the main view
         view.addSubview(detailView)
         
-        
+        //Creating a lable to shwot the collection's name
         let detailLabel = UILabel(frame: CGRect(x: 0 , y: detailView.frame.height * 0.1, width: detailView.frame.width * 0.5 , height: detailView.frame.height * 0.34))
         detailLabel.textAlignment = .center
         detailLabel.text = "\((collectName)!)"
@@ -113,15 +130,17 @@ class ProductViewController: UIViewController {
         detailLabel.textColor = #colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1)
         detailLabel.font = UIFont.boldSystemFont(ofSize: 25)
         
+        //Centering the detailed label's horizontal axis center with respect to the detailed view
         detailLabel.center.x = detailView.center.x
         
+        //Creating an image that will have the collection's image
         let detailImage = UIImageView()
         detailImage.image = imageProduct
         detailImage.contentMode = .scaleToFill
         detailImage.layer.cornerRadius = 10
         detailImage.translatesAutoresizingMaskIntoConstraints = false
         
-        
+        //Creating a detail's text that will hold the HTML of the collects
         let detailText = UILabel(frame: CGRect(x: 0 , y: detailView.frame.height * 0.35 , width: detailView.frame.width * 0.6 , height: detailView.frame.height * 0.7))
         detailText.textAlignment = .left
         detailText.text = "\((bodyHTML)!)"
@@ -130,12 +149,15 @@ class ProductViewController: UIViewController {
         detailText.textColor = #colorLiteral(red: 0.1019607857, green: 0.2784313858, blue: 0.400000006, alpha: 1)
         detailText.font = UIFont.boldSystemFont(ofSize: 15)
         
+        //Centering the detailed text horizontal axis center with respect to the detailed view
         detailText.center.x = detailView.center.x
         
+        //Adding the objects to the detail view
         detailView.addSubview(detailLabel)
         detailView.addSubview(detailImage)
         detailView.addSubview(detailText)
         
+        //Setting up constraints for the detail image in a dynamic manner so it will look the same on different devices
         detailImage.leftAnchor.constraint(equalTo: detailView.leftAnchor, constant: UIScreen.main.bounds.width * 0.05).isActive = true
         detailImage.topAnchor.constraint(equalTo: detailView.topAnchor, constant: UIScreen.main.bounds.width * 0.05).isActive = true
         detailImage.heightAnchor.constraint(equalToConstant: detailView.frame.height * 0.5).isActive = true
@@ -161,35 +183,40 @@ class ProductViewController: UIViewController {
     
     //This function is used to set up the constraints for the collectionView
     private func setupUI() {
+        //Adding the collection view to the main view
         view.addSubview(collectionView)
         
-        //this allows you to put as many constraints in here as you need, even if you have other elements, and you don't need to .isActive = true anymore
+        //This is used to set up the constraints for the collection View
         NSLayoutConstraint.activate([
             collectionView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             collectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.height * 0.3),
             collectionView.widthAnchor.constraint(equalTo: view.widthAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             ])
-            }
+        }
     
     
     //MARK: This function is used to fetch the collects data
     func fetchJSON(url: String, completion: @escaping (Collects?, Error?) -> Void) {
+        //Making sure that a url exists
         guard let url = URL(string: url) else { return }
-        
+        //Creating a session
         let session = URLSession.shared
+        //Creating a task
         let dataTask = session.dataTask(with: url) { (data, response, error) in
+            //Checking to see if there is an error
             if let error = error {
                 completion(nil, error)
-                
+                //Creating a pop up alerts to display the error
                 let alert = UIAlertController(title: "Error", message:"Unable to Retrive the data!", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
-                
                 print("Unable to fetch data", error)
             }
+            //Checking to see if the data exists
             guard let data = data else { return }
             do {
+                //Decoding the JSON data
                 let response = try JSONDecoder().decode(Collects.self, from: data)
                 DispatchQueue.main.async {
                     completion(response, nil)
@@ -198,31 +225,37 @@ class ProductViewController: UIViewController {
                 print("Unable to decode: ", jsonError)
             }
         }
+        //Starting the task
         dataTask.resume()
     }
     
     
     //MARK: This function is used to fetch the Products data
     func fetchProducts(url: String, completion: @escaping (Products?, Error?) -> Void) {
+        //Making sure that a url exists
         guard let url = URL(string: url) else { return }
-        
+        //Creating a session
         let session = URLSession.shared
+        //Creating a task
         let dataTask = session.dataTask(with: url) { (data, response, error) in
+            //Checking to see if there is an error
             if let error = error {
                 completion(nil, error)
+                //Creating a pop up alerts to display the error
                 let alert = UIAlertController(title: "Error", message:"Unable to Retrive the data!", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
                 print("Unable to fetch data", error)
             }
+            //Checking to see if the data exists
             guard let data = data else { return }
             do {
+                //Decoding the JSON data
                 let response = try JSONDecoder().decode(Products.self, from: data)
                 DispatchQueue.main.async {
                     completion(response, nil)
                 }
             } catch let jsonError{
-                
                 print("Unable to decode: ", jsonError)
             }
         }
@@ -247,63 +280,46 @@ class ProductViewController: UIViewController {
         return collectionView
     }()
     
-    
-    //Lets create a dismiss button in a navigation controller
-    func setNavigationBar() {
-        let screenSize: CGRect = UIScreen.main.bounds
-        let window = UIApplication.shared.keyWindow
-        
-        let navBar = UINavigationBar(frame: CGRect(x: 0, y: (window?.safeAreaInsets.top)!, width: screenSize.width, height: 70))
-        let navItem = UINavigationItem(title: "\((collectName)!)")
-        let doneItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.done, target: nil, action: #selector(done))
-        navItem.rightBarButtonItem = doneItem
-        navBar.setItems([navItem], animated: false)
-        self.view.addSubview(navBar)
-    }
-    
-    
-    @objc func done() {
-        self.dismiss(animated: true, completion: nil)
-    }
-
-
 }
 
 
 //Setting up the collectionView extensions seperate
 extension ProductViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-
+    //Setting up the number of items as the prodocuts array's coutn
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return products.count
     }
 
+    //
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        //Declaring the cell with the custom one that was made in ProductCollectionViewCell
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ProductCollectionViewCell
-        
+        //Setting up the product's name with the title
         var productName = products[indexPath.item].title
-        print(products[indexPath.item].variants)
+        //Editing the product's name to remove the collection's name in the beginning
         productName = productName.replacingOccurrences(of: "\((collectName)!)", with: "")
-        cell.numberofposts = products[indexPath.item].variants.count
+        //specifying the cell's name label as the edited product name
         cell.nameLabel.text = productName
+        //Setting the product's image as the collection's image
         cell.productImage.image = imageProduct
+        //Passing data for our collection's image
         cell.collectionLabel.text = "Collection: \((collectName)!)"
+        //Specifying the corner radius to make the cell rounded
         cell.layer.cornerRadius = 10
+        //Passing the variant's array to the datasource array in the cell
         cell.dataSource = products[indexPath.item].variants
         return cell
     }
 
     
-    
+    //Specifying the cell's size
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 300, height: 300)
     }
 
+    //Speficying the insets of the collection cell
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
     }
-
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    }
-
 
 }

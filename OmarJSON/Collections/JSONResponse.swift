@@ -7,83 +7,38 @@
 //
 
 import Foundation
-
+//This is the struct for the first JSON Responce
 struct JSONResponse: Codable {
+    //Creating a variable that belongs to the CustomCollection to do the hierarchy of the JSON structure
     let customCollections: [CustomCollection]?
-    
+    //Since the name of the custom collections in the JSON responce does not conform to the camel case, I used
+    //an enum to restate it
     enum CodingKeys: String, CodingKey {
         case customCollections = "custom_collections"
     }
 }
 
+//For the custom collections, I created a struc of the values that we need.
 struct CustomCollection: Codable {
     let id: Int?
-    let handle, title: String?
-    let updatedAt: String?
+    let title: String?
     let bodyHTML: String?
-    let publishedAt: String?
-    let sortOrder: SortOrder?
-    let templateSuffix: String?
-    let publishedScope: PublishedScope?
-    let adminGraphqlAPIID: String?
+    //Creating an image that is a variable of the image struct due to the hierarchy of the JSON Structure
     let image: Image?
     
     enum CodingKeys: String, CodingKey {
-        case id, handle, title
-        case updatedAt = "updated_at"
+        case id, title
         case bodyHTML = "body_html"
-        case publishedAt = "published_at"
-        case sortOrder = "sort_order"
-        case templateSuffix = "template_suffix"
-        case publishedScope = "published_scope"
-        case adminGraphqlAPIID = "admin_graphql_api_id"
         case image
     }
 }
 
+//This struct is for the Image in the JSON structure.
 struct Image: Codable {
-    let createdAt: String?
-    let alt: JSONNull?
-    let width, height: Int?
     let src: String?
     
     enum CodingKeys: String, CodingKey {
-        case createdAt = "created_at"
-        case  alt,width, height, src
+        case src
     }
 }
 
-enum PublishedScope: String, Codable {
-    case web = "web"
-}
-
-enum SortOrder: String, Codable {
-    case bestSelling = "best-selling"
-}
-
-// MARK: Encode/decode helpers
-//
-class JSONNull: Codable, Hashable {
-
-    public static func == (lhs: JSONNull, rhs: JSONNull) -> Bool {
-        return true
-    }
-
-    public var hashValue: Int {
-        return 0
-    }
-
-    public init() {}
-
-    public required init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        if !container.decodeNil() {
-            throw DecodingError.typeMismatch(JSONNull.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for JSONNull"))
-        }
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encodeNil()
-    }
-}

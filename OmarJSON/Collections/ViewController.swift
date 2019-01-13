@@ -19,13 +19,14 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        collectionView.keyboardDismissMode = .onDrag
         view.backgroundColor = .white
+        //Setting up the user interface in the viewDidLoad
         setupUI()
         setupNavController()
         
-        //Need to specify dispatch.async here with completion for task
+        //Fetching the JSON from the first URL
         fetchJSON(url: jsonURL) { (response, error) in
+            //Setting up the item to the response struct
             guard let item = response?.customCollections else { return }
             self.customCollections = item
             self.currentCustomCollections = self.customCollections
@@ -58,13 +59,15 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         
     }
     
-    
+    //Creting a function that will trigger when scrolling occurs
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print("View is scrolling")
-        
+        //Creating references to the screen
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
+        //Setting up constraints to show the search bar if the screen has scrolled enoough to dismiss the large tile
+        //Of the navigation controller
         if offsetY > contentHeight - scrollView.frame.size.height * leadingScreensForBatching {
+            //showing the searchBar if it is passed the scrolling position of the large navigationbar
             searchBar.isHidden = false
             let leftNavBarButton = UIBarButtonItem(customView: searchBar)
             navigationItem.rightBarButtonItem = leftNavBarButton
@@ -73,13 +76,8 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         }else {
             searchBar.isHidden = true
         }
-        
     }
-    
-    //This is used to make the status bar white
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+
     
     //MARK: CollectionView
     lazy var collectionView: UICollectionView = {
@@ -98,10 +96,10 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         return collectionView
     }()
     
+    //Setting up the user interface
     private func setupUI() {
         view.addSubview(collectionView)
-        
-        //this allows you to put as many constraints in here as you need, even if you have other elements, and you don't need to .isActive = true anymore
+        //Setting up the constraints for the collectin View
         NSLayoutConstraint.activate([
             collectionView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             collectionView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
@@ -119,29 +117,35 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             collectionView.reloadData()
             return
         }
-        currentCustomCollections = customCollections.filter({city -> Bool in
-            city.title!.lowercased().contains(searchText.lowercased())
+        //Filtering the customCollections array with the collection's title
+        currentCustomCollections = customCollections.filter({collection -> Bool in
+            collection.title!.lowercased().contains(searchText.lowercased())
         })
+        //Reloading the collectionview after the filtering has been made
         collectionView.reloadData()
     }
     
+    //This is used to dismiss the keyboard when the scroll starts to move
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         collectionView.reloadData()
         collectionView.endEditing(true)
     }
     
+    //This is used to dismiss the keyboard when the search button is clicked
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.endEditing(true)
         collectionView.reloadData()
     }
     
-    //MARK: NetworkRequest
+    //MARK: NetworkRequest- fetching the JSON data
     func fetchJSON(url: String, completion: @escaping (JSONResponse?, Error?) -> Void) {
         guard let url = URL(string: url) else { return }
         
-        //Look at difference of URLSession types and why "shared" is used here
+        //Initializing our serrion
         let session = URLSession.shared
+        //Creating a task
         let dataTask = session.dataTask(with: url) { (data, response, error) in
+            //Checking to see if an error occured and giving a popup alert
             if let error = error {
                 completion(nil, error)
                 print("Unable to fetch data", error)
@@ -149,8 +153,10 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
                 alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
+            //Checking to see if there is data aquired
             guard let data = data else { return }
             do {
+                //Decoding the json data
                 let response = try JSONDecoder().decode(JSONResponse.self, from: data)
                 DispatchQueue.main.async {
                     completion(response, nil)
@@ -162,6 +168,7 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
                 print("Unable to decode: ", jsonError)
             }
         }
+        //Starting the task
         dataTask.resume()
     }
 }
@@ -170,43 +177,53 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
 //I worked with collectionView's protocols in an extension just so they can be separate, easier to get to
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
+    //setting up the collectionview number to the filtered array
+    //However if its not filtered then it will show the count of the whole call
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return currentCustomCollections.count
     }
     
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        //declaring the cell with the custom one that was made in CustomCollectionViewCell
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! CustomCollectionViewCell
-        
+        //stating the collection name to the collection's title
         var collectionName = currentCustomCollections[indexPath.item].title
+        //Removing the "Collection's" phrase so its not excesive
         collectionName = collectionName?.replacingOccurrences(of: "collection", with: "")
-        
+        //Specifying the name label (in the cell) to the new collection name
         cell.nameLabel.text = collectionName
+        //Creating a corner radium for the cell to make it look better
         cell.layer.cornerRadius = 25
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        //Specifying the size of the cell
         return CGSize(width: UIScreen.main.bounds.width * 0.7, height: UIScreen.main.bounds.height * 0.1)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        //Specifying the insets of the collectionView
         return UIEdgeInsets(top: 20, left: 5, bottom: 20, right: 5)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        //Recaling the collection name and editing it before sending it to the next view
         var collectionName = currentCustomCollections[indexPath.item].title
         collectionName = collectionName?.replacingOccurrences(of: "collection", with: "")
-        //Passed the variable to the other controller
+        //Created an instance of the product view controller to pass the data
         let productsController = ProductViewController()
+        //The collectID variable is set to the collection's ID
         productsController.collectID = currentCustomCollections[indexPath.item].id
+        //The bodyHTML variable is set to the collection's body_HTML
         productsController.bodyHTML = currentCustomCollections[indexPath.item].bodyHTML
+        //The collect's varialbe is set to the modified collection name
         productsController.collectName = collectionName
+        //The collectionImage variable is set to the image source
         productsController.collectionImage = currentCustomCollections[indexPath.item].image?.src
-//        self.present(productsController, animated: true, completion: nil)
+        //Presenting the view controller with a "Push" to keep the navigation bar
         navigationController?.pushViewController(productsController, animated: true)
-        
-        
     }
 }
 
