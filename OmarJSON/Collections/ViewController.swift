@@ -33,7 +33,6 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             
             self.collectionView.reloadData()
         }
-        
 
     }
     
@@ -125,11 +124,11 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         collectionView.reloadData()
     }
     
-    //This is used to dismiss the keyboard when the scroll starts to move
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        collectionView.reloadData()
-        collectionView.endEditing(true)
-    }
+//    //This is used to dismiss the keyboard when the scroll starts to move
+//    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+//        collectionView.reloadData()
+//        collectionView.endEditing(true)
+//    }
     
     //This is used to dismiss the keyboard when the search button is clicked
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {

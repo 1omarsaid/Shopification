@@ -49,7 +49,7 @@ class ProductCollectionViewCell: UICollectionViewCell, UIPickerViewDelegate, UIP
     let inventoryLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Inventory"
+        label.text = "Inventory(Color: Quanitity)"
         label.textColor = #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1)
         label.font = UIFont.boldSystemFont(ofSize: 20)
         label.textAlignment = .center
@@ -71,7 +71,9 @@ class ProductCollectionViewCell: UICollectionViewCell, UIPickerViewDelegate, UIP
         var userImage = UIImageView()
         userImage.layer.masksToBounds = true
         userImage.backgroundColor = .clear
-        userImage.layer.cornerRadius = 70
+        userImage.layer.borderColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
+        userImage.layer.borderWidth = 3.0
+        userImage.layer.cornerRadius = 20
         userImage.clipsToBounds =  true
         userImage.contentMode = .scaleAspectFit
         userImage.translatesAutoresizingMaskIntoConstraints = false
@@ -91,7 +93,7 @@ class ProductCollectionViewCell: UICollectionViewCell, UIPickerViewDelegate, UIP
             //Need x, y, width and height contraints
             //Image constraints
             productImage.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 0),
-            productImage.centerYAnchor.constraint(equalTo: topAnchor, constant: UIScreen.main.bounds.height * 0.05),
+            productImage.centerYAnchor.constraint(equalTo: topAnchor, constant: UIScreen.main.bounds.height * 0.07),
             productImage.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height * 0.13),
             productImage.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.height * 0.13),
             
@@ -111,7 +113,7 @@ class ProductCollectionViewCell: UICollectionViewCell, UIPickerViewDelegate, UIP
             inventoryLabel.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 0),
             inventoryLabel.topAnchor.constraint(equalTo: collectionLabel.bottomAnchor, constant: UIScreen.main.bounds.height * 0),
             inventoryLabel.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height * 0.03),
-            inventoryLabel.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width  * 0.7),
+            inventoryLabel.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width  * 0.9),
             
             //Picker view constraints
             pickerView.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 0),

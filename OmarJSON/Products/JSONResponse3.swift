@@ -8,28 +8,41 @@
 
 import Foundation
 
+//Creating a struct for the products
 struct Products: Codable {
+    //Created a variable to reference the products that is in the second order of the JSON Structure
     let products: [Product]
 }
 
+//Created a struct for the products to reference the product name and variants
 struct Product: Codable {
-//    let id: Int
     let title: String
     let variants: [Variant]
-    
+    let image: imagesrc
 
     enum CodingKeys: String, CodingKey {
         case title
         case variants
+        case image
 
     }
 }
 
+struct imagesrc: Codable {
+    let src: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case src
+    }
+}
+
+
+//Creating a struct for the variants
 struct Variant: Codable {
     let inventoryQuantity: Int
     let title: String
-
     
+    //Created a variable to reference the variants that is in the third order of the JSON Structure
     enum CodingKeys: String, CodingKey {
         case inventoryQuantity = "inventory_quantity"
         case title

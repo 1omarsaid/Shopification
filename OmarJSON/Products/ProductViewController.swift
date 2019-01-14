@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class ProductViewController: UIViewController {
 
@@ -32,6 +33,8 @@ class ProductViewController: UIViewController {
     //The cell ID for the cells
     let cellId = "cellid"
     
+    var image = [imagesrc]()
+    
     
  
     override func viewDidLoad() {
@@ -39,8 +42,6 @@ class ProductViewController: UIViewController {
         view.backgroundColor = .white
         //Setting up the navigationBar
         setupNavController()
-        //Setting up the user interface
-        setupUI()
         //Setting up the background color to match the main view
         view.backgroundColor = #colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1)
         //Using string intorpelation to get the new JSON data
@@ -79,23 +80,7 @@ class ProductViewController: UIViewController {
         {
             imageProduct = UIImage(data: data)
         }
-        
-        //Specify a background thread for the work
-        DispatchQueue.global(qos: .background).async {
-            do
-            {
-                let data = try Data.init(contentsOf: URL.init(string:"url")!)
-                DispatchQueue.main.async {
-                    self.imageProduct = UIImage(data: data)
-                }
-            }
-            catch {
-                //Specifying Alert to show user that image can not be downloaded at this time
-                let alert = UIAlertController(title: "Error", message:"Image can not be loaded at this time", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-            }
-        }
+ 
         
      setupExtraComponent()
         
@@ -103,26 +88,9 @@ class ProductViewController: UIViewController {
     
     //This function is used to set up the card view that displays the collection's html as well as its image and title
     func setupExtraComponent() {
-        //Creating the detailed view that will be at the top of the screen
-        let detailView = UIView()
-        //Resizing the view if the collection's text is empty of has data in it
-        if bodyHTML == "" {
-            detailView.frame = CGRect(x: 0, y: UIScreen.main.bounds.height * 0.12, width: UIScreen.main.bounds.width * 0.9, height: UIScreen.main.bounds.height * 0.1)
-        }else {
-            detailView.frame = CGRect(x: 0, y: UIScreen.main.bounds.height * 0.12, width: UIScreen.main.bounds.width * 0.9, height: UIScreen.main.bounds.height * 0.15)
-        }
-        
-        //Specifying the detail view to be white to match the current user interface layout
-        detailView.backgroundColor = .white
-        //creating a corner radius to make it look better
-        detailView.layer.cornerRadius = 40
-        //Centering the collection view with respect to the main view
-        detailView.center.x = view.center.x
-        //Add the detailed view to the main view
-        view.addSubview(detailView)
-        
+
         //Creating a lable to shwot the collection's name
-        let detailLabel = UILabel(frame: CGRect(x: 0 , y: detailView.frame.height * 0.1, width: detailView.frame.width * 0.5 , height: detailView.frame.height * 0.34))
+        let detailLabel = UILabel()
         detailLabel.textAlignment = .center
         detailLabel.text = "\((collectName)!)"
         detailLabel.numberOfLines = 0
@@ -131,7 +99,6 @@ class ProductViewController: UIViewController {
         detailLabel.font = UIFont.boldSystemFont(ofSize: 25)
         
         //Centering the detailed label's horizontal axis center with respect to the detailed view
-        detailLabel.center.x = detailView.center.x
         
         //Creating an image that will have the collection's image
         let detailImage = UIImageView()
@@ -140,8 +107,10 @@ class ProductViewController: UIViewController {
         detailImage.layer.cornerRadius = 10
         detailImage.translatesAutoresizingMaskIntoConstraints = false
         
+
+        
         //Creating a detail's text that will hold the HTML of the collects
-        let detailText = UILabel(frame: CGRect(x: 0 , y: detailView.frame.height * 0.35 , width: detailView.frame.width * 0.6 , height: detailView.frame.height * 0.7))
+        let detailText = UILabel(frame: CGRect(x: UIScreen.main.bounds.width * 0.3 , y: view.frame.height * 0.05 , width: view.frame.width * 0.55 , height: view.frame.height * 0.2))
         detailText.textAlignment = .left
         detailText.text = "\((bodyHTML)!)"
         detailText.numberOfLines = 0
@@ -149,8 +118,29 @@ class ProductViewController: UIViewController {
         detailText.textColor = #colorLiteral(red: 0.1019607857, green: 0.2784313858, blue: 0.400000006, alpha: 1)
         detailText.font = UIFont.boldSystemFont(ofSize: 15)
         
-        //Centering the detailed text horizontal axis center with respect to the detailed view
-        detailText.center.x = detailView.center.x
+        //Creating the detailed view that will be at the top of the screen
+        let detailView = UIView()
+        if bodyHTML == "" {
+            detailView.frame = CGRect(x: 0, y: UIScreen.main.bounds.height * 0.12, width: UIScreen.main.bounds.width * 0.9, height: UIScreen.main.bounds.height * 0.16)
+            detailLabel.frame = CGRect(x: 0 , y: UIScreen.main.bounds.height * 0.07, width: view.frame.width * 0.5 , height: view.frame.height * 0.035)
+            detailLabel.center.x = view.center.x
+        }else {
+            detailView.frame = CGRect(x: 0, y: UIScreen.main.bounds.height * 0.12, width: UIScreen.main.bounds.width * 0.9, height: detailText.frame.height + detailLabel.frame.height + UIScreen.main.bounds.height * 0.08)
+            detailLabel.frame = CGRect(x: 0 , y: view.frame.height * 0.015, width: view.frame.width * 0.5 , height: view.frame.height * 0.035)
+            detailLabel.center.x = view.center.x
+
+        }
+
+
+        
+        //Specifying the detail view to be white to match the current user interface layout
+        detailView.backgroundColor = .white
+        //creating a corner radius to make it look better
+        detailView.layer.cornerRadius = 20
+        //Centering the collection view with respect to the main view
+        detailView.center.x = view.center.x
+        //Add the detailed view to the main view
+        view.addSubview(detailView)
         
         //Adding the objects to the detail view
         detailView.addSubview(detailLabel)
@@ -158,10 +148,18 @@ class ProductViewController: UIViewController {
         detailView.addSubview(detailText)
         
         //Setting up constraints for the detail image in a dynamic manner so it will look the same on different devices
-        detailImage.leftAnchor.constraint(equalTo: detailView.leftAnchor, constant: UIScreen.main.bounds.width * 0.05).isActive = true
-        detailImage.topAnchor.constraint(equalTo: detailView.topAnchor, constant: UIScreen.main.bounds.width * 0.05).isActive = true
-        detailImage.heightAnchor.constraint(equalToConstant: detailView.frame.height * 0.5).isActive = true
-        detailImage.widthAnchor.constraint(equalToConstant: detailView.frame.height * 0.5).isActive = true
+        detailImage.leftAnchor.constraint(equalTo: view.leftAnchor, constant: UIScreen.main.bounds.width * 0.1).isActive = true
+        detailImage.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.height * 0.15).isActive = true
+        detailImage.heightAnchor.constraint(equalToConstant: view.frame.width * 0.2).isActive = true
+        detailImage.widthAnchor.constraint(equalToConstant: view.frame.width * 0.2).isActive = true
+        
+        view.addSubview(collectionView)
+        
+        collectionView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        collectionView.topAnchor.constraint(equalTo: detailView.bottomAnchor, constant: UIScreen.main.bounds.height * 0.03).isActive = true
+        collectionView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
     }
     
     //This function is used to set up the attributes of the navigation controller
@@ -180,21 +178,6 @@ class ProductViewController: UIViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
-    
-    //This function is used to set up the constraints for the collectionView
-    private func setupUI() {
-        //Adding the collection view to the main view
-        view.addSubview(collectionView)
-        
-        //This is used to set up the constraints for the collection View
-        NSLayoutConstraint.activate([
-            collectionView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.height * 0.3),
-            collectionView.widthAnchor.constraint(equalTo: view.widthAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            ])
-        }
-    
     
     //MARK: This function is used to fetch the collects data
     func fetchJSON(url: String, completion: @escaping (Collects?, Error?) -> Void) {
@@ -301,7 +284,28 @@ extension ProductViewController: UICollectionViewDelegate, UICollectionViewDataS
         //specifying the cell's name label as the edited product name
         cell.nameLabel.text = productName
         //Setting the product's image as the collection's image
-        cell.productImage.image = imageProduct
+        
+        let url = URL(string: "\((products[indexPath.item].image.src)!)")
+        cell.productImage.kf.indicatorType = .activity
+        cell.productImage.kf.setImage(with: url)
+        
+        //Specify a background thread for the work
+            DispatchQueue.global(qos: .background).async {
+                do
+                {
+                    let data = try Data.init(contentsOf: url!)
+                    DispatchQueue.main.async {
+                        cell.productImage.image = UIImage(data: data)
+                    }
+                }
+                catch {
+                    //Specifying Alert to show user that image can not be downloaded at this time
+                    let alert = UIAlertController(title: "Error", message:"Image can not be loaded at this time", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
+            }
+
         //Passing data for our collection's image
         cell.collectionLabel.text = "Collection: \((collectName)!)"
         //Specifying the corner radius to make the cell rounded
