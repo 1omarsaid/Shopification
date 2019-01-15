@@ -40,6 +40,9 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
+        
+        
+        
 
     }
     
@@ -108,9 +111,7 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         //Setting up the constraints for the collectin View
         NSLayoutConstraint.activate([
             collectionView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            collectionView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             collectionView.widthAnchor.constraint(equalTo: view.widthAnchor),
-//            collectionView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.9),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             collectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: ((UIApplication.shared.keyWindow?.safeAreaInsets.top)! + 40))
             ])
@@ -131,12 +132,6 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         //Reloading the collectionview after the filtering has been made
         collectionView.reloadData()
     }
-    
-//    //This is used to dismiss the keyboard when the scroll starts to move
-//    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-//        collectionView.reloadData()
-//        collectionView.endEditing(true)
-//    }
     
     //This is used to dismiss the keyboard when the search button is clicked
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ProductViewController: UIViewController {
+class ProductViewController: UIViewController, UISearchBarDelegate {
 
     //Collect ID used query the last URL
     var collectID: Int!
@@ -27,6 +27,8 @@ class ProductViewController: UIViewController {
     var collectionCollects = ""
     //This will have the products
     var products = [Product]()
+    //this array willl be used for the filter
+    var currentProducts = [Product]()
     //This will have the variants
     var varients = [Variant]()
     //The cell ID for the cells
@@ -45,7 +47,7 @@ class ProductViewController: UIViewController {
         view.backgroundColor = #colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1)
         //Using string intorpelation to get the new JSON data
         let jsonURL = "https://shopicruit.myshopify.com/admin/collects.json?collection_id=\((collectID)!)&page=1&access_token=c32313df0d0ef512ca64d5b336a0d7c6"
-        
+
         
         //WInitially we need to fetch the collects to build the final URL
         fetchJSON(url: jsonURL) { (response, error) in
@@ -68,6 +70,7 @@ class ProductViewController: UIViewController {
             self.fetchProducts(url: productURL) { (response, error) in
                 guard let item = response?.products else {return}
                 self.products = item
+                self.currentProducts = self.products
                 self.collectionView.reloadData()
             }
         }
@@ -84,6 +87,7 @@ class ProductViewController: UIViewController {
      setupExtraComponent()
         
     }
+
     
     //This function is used to set up the card view that displays the collection's html as well as its image and title
     func setupExtraComponent() {
@@ -170,6 +174,11 @@ class ProductViewController: UIViewController {
         let attributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
         navigationController?.navigationBar.largeTitleTextAttributes = attributes
         navigationController?.navigationBar.titleTextAttributes = attributes
+        let searchBar: UISearchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width / 2.5, height: 20))
+        let leftNavigation = UIBarButtonItem(customView: searchBar)
+        navigationItem.rightBarButtonItems = [leftNavigation]
+        searchBar.placeholder = "Search..."
+        searchBar.delegate = self
     }
     
     
@@ -210,6 +219,28 @@ class ProductViewController: UIViewController {
         //Starting the task
         dataTask.resume()
     }
+    
+    //MARK: Search Bar Set up
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        guard !searchText.isEmpty else {
+            currentProducts = products
+            collectionView.reloadData()
+            return
+        }
+        //Filtering the customCollections array with the product's name
+        currentProducts = products.filter({ (data) -> Bool in
+            data.title.lowercased().contains(searchText.lowercased())
+        })
+        //Reloading the collectionView with the filtered data
+        collectionView.reloadData()
+    }
+    
+    //This is used to dismiss the keyboard when the search button is pressed
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.endEditing(true)
+        collectionView.reloadData()
+    }
+    
     
     
     //MARK: This function is used to fetch the Products data
@@ -269,7 +300,7 @@ class ProductViewController: UIViewController {
 extension ProductViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     //Setting up the number of items as the prodocuts array's coutn
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return products.count
+        return currentProducts.count
     }
 
     //
@@ -277,7 +308,7 @@ extension ProductViewController: UICollectionViewDelegate, UICollectionViewDataS
         //Declaring the cell with the custom one that was made in ProductCollectionViewCell
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ProductCollectionViewCell
         //Setting up the product's name with the title
-        var productName = products[indexPath.item].title
+        var productName = currentProducts[indexPath.item].title
         //Editing the product's name to remove the collection's name in the beginning
         productName = productName.replacingOccurrences(of: "\((collectName)!)", with: "")
         //specifying the cell's name label as the edited product name
@@ -285,7 +316,7 @@ extension ProductViewController: UICollectionViewDelegate, UICollectionViewDataS
         //Setting the "out of value" parameter in the cell
         cell.outOfLabel.text = "\(indexPath.item + 1)/\(products.count)"
         //Setting the product's image as the collection's image
-        let url = URL(string: "\((products[indexPath.item].image.src)!)")
+        let url = URL(string: "\((currentProducts[indexPath.item].image.src)!)")
 //        cell.productImage.kf.indicatorType = .activity
 //        cell.productImage.kf.setImage(with: url)
         
@@ -311,7 +342,7 @@ extension ProductViewController: UICollectionViewDelegate, UICollectionViewDataS
         //Specifying the corner radius to make the cell rounded
         cell.layer.cornerRadius = 10
         //Passing the variant's array to the datasource array in the cell
-        cell.dataSource = products[indexPath.item].variants
+        cell.dataSource = currentProducts[indexPath.item].variants
         return cell
     }
 
@@ -327,32 +358,31 @@ extension ProductViewController: UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(products[indexPath.item].title)
         let detailView = ExtraDetailViewController()
-        detailView.idLabel.text = "Id: \(products[indexPath.item].id)"
+        detailView.idLabel.text = "Id: \(currentProducts[indexPath.item].id)"
         
-        var productName = products[indexPath.item].title
+        var productName = currentProducts[indexPath.item].title
         //Editing the product's name to remove the collection's name in the beginning
         productName = productName.replacingOccurrences(of: "\((collectName)!)", with: "")
         //specifying the cell's name label as the edited product name
         detailView.nameLabel.text = "Name: \(productName)"
-        detailView.tagsLabel.text = "Tags: \(products[indexPath.item].tags)"
-        detailView.productTypeLabel.text = "Type: \(products[indexPath.item].productType)"
+        detailView.tagsLabel.text = "Tags: \(currentProducts[indexPath.item].tags)"
+        detailView.productTypeLabel.text = "Type: \(currentProducts[indexPath.item].productType)"
         //We need to trim the date string
         //First lets do it for the published string
-        let publishedString = "\(products[indexPath.item].publishedAt)"
+        let publishedString = "\(currentProducts[indexPath.item].publishedAt)"
         let endIndexForPublished = publishedString.index(publishedString.endIndex, offsetBy: -15)
         let newPublishedString = publishedString.substring(to: endIndexForPublished)
         //Second lets do it for the Updated string
-        let updatedString = "\(products[indexPath.item].updatedAt)"
+        let updatedString = "\(currentProducts[indexPath.item].updatedAt)"
         let endIndexForUpdate = publishedString.index(updatedString.endIndex, offsetBy: -15)
         let newUpdatedString = publishedString.substring(to: endIndexForUpdate)
         
         detailView.publishLabel.text = "Published at: \(newPublishedString)"
         detailView.updateLabel.text = "Updated at: \(newUpdatedString)"
-        detailView.dataSource = products[indexPath.item].variants
+        detailView.dataSource = currentProducts[indexPath.item].variants
         
-        let url = URL(string: "\((products[indexPath.item].image.src)!)")
+        let url = URL(string: "\((currentProducts[indexPath.item].image.src)!)")
         //        cell.productImage.kf.indicatorType = .activity
         //        cell.productImage.kf.setImage(with: url)
         
@@ -376,11 +406,11 @@ extension ProductViewController: UICollectionViewDelegate, UICollectionViewDataS
         detailView.vendorLabel.text = "Vendor: \(products[indexPath.item].vendor)"
         
         
-        if products[indexPath.item].bodyHTML == "" {
+        if currentProducts[indexPath.item].bodyHTML == "" {
             //If the description, dont do anything
         }else {
             //Send the text to the ExtradetailViewController
-            detailView.htmlLabel.text = "Description: \n\(products[indexPath.item].bodyHTML)nhk ljhi hgkl jn klkj hgj hbk hkl hkhk  j nllifel; grl gjrel g re gnrela jbren abl bna "
+            detailView.htmlLabel.text = "Description: \n\(currentProducts[indexPath.item].bodyHTML)nhk ljhi hgkl jn klkj hgj hbk hkl hkhk  j nllifel; grl gjrel g re gnrela jbren abl bna "
         }
         
         
