@@ -62,29 +62,6 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         navigationController?.navigationBar.largeTitleTextAttributes = attributes
         navigationController?.navigationBar.titleTextAttributes = attributes
         navigationController?.navigationBar.tintColor = .white
-        
-        
-        
-        
-    }
-    
-    //Creting a function that will trigger when scrolling occurs
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        //Creating references to the screen
-        let offsetY = scrollView.contentOffset.y
-        let contentHeight = scrollView.contentSize.height
-        //Setting up constraints to show the search bar if the screen has scrolled enoough to dismiss the large tile
-        //Of the navigation controller
-        if offsetY > contentHeight - scrollView.frame.size.height * leadingScreensForBatching {
-            //showing the searchBar if it is passed the scrolling position of the large navigationbar
-            searchBar.isHidden = false
-            let leftNavBarButton = UIBarButtonItem(customView: searchBar)
-            navigationItem.rightBarButtonItem = leftNavBarButton
-            searchBar.placeholder = "Search..."
-            searchBar.delegate = self
-        }else {
-            searchBar.isHidden = true
-        }
     }
 
     

@@ -168,7 +168,7 @@ class ProductViewController: UIViewController, UISearchBarDelegate {
     //This function is used to set up the attributes of the navigation controller
     private func setupNavController() {
         view.backgroundColor = .white
-        navigationItem.title = "Collections"
+        navigationItem.title = "\((collectName)!)"
         navigationController?.navigationBar.barTintColor =  #colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1)
         navigationController?.navigationBar.prefersLargeTitles = false
         let attributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
@@ -303,7 +303,7 @@ extension ProductViewController: UICollectionViewDelegate, UICollectionViewDataS
         return currentProducts.count
     }
 
-    //
+    //This is used to specify what data is displayed in each collection cell
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         //Declaring the cell with the custom one that was made in ProductCollectionViewCell
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ProductCollectionViewCell
@@ -317,8 +317,6 @@ extension ProductViewController: UICollectionViewDelegate, UICollectionViewDataS
         cell.outOfLabel.text = "\(indexPath.item + 1)/\(products.count)"
         //Setting the product's image as the collection's image
         let url = URL(string: "\((currentProducts[indexPath.item].image.src)!)")
-//        cell.productImage.kf.indicatorType = .activity
-//        cell.productImage.kf.setImage(with: url)
         
         //Specify a background thread for the work
             DispatchQueue.global(qos: .background).async {
@@ -366,6 +364,7 @@ extension ProductViewController: UICollectionViewDelegate, UICollectionViewDataS
         productName = productName.replacingOccurrences(of: "\((collectName)!)", with: "")
         //specifying the cell's name label as the edited product name
         detailView.nameLabel.text = "Name: \(productName)"
+        detailView.name = "\(productName)"
         detailView.tagsLabel.text = "Tags: \(currentProducts[indexPath.item].tags)"
         detailView.productTypeLabel.text = "Type: \(currentProducts[indexPath.item].productType)"
         //We need to trim the date string
@@ -382,9 +381,8 @@ extension ProductViewController: UICollectionViewDelegate, UICollectionViewDataS
         detailView.updateLabel.text = "Updated at: \(newUpdatedString)"
         detailView.dataSource = currentProducts[indexPath.item].variants
         
+        //Grabbing the URL for the image
         let url = URL(string: "\((currentProducts[indexPath.item].image.src)!)")
-        //        cell.productImage.kf.indicatorType = .activity
-        //        cell.productImage.kf.setImage(with: url)
         
         //Specify a background thread for the work
         DispatchQueue.global(qos: .background).async {
@@ -403,17 +401,18 @@ extension ProductViewController: UICollectionViewDelegate, UICollectionViewDataS
             }
         }
         
+        //Specifying the vendor's label in the extra detailed view
         detailView.vendorLabel.text = "Vendor: \(products[indexPath.item].vendor)"
         
-        
+        //Checking to see if there is any text in the body_HTML parameter
         if currentProducts[indexPath.item].bodyHTML == "" {
             //If the description, dont do anything
+            print("There is nothing in the html parameter")
         }else {
             //Send the text to the ExtradetailViewController
-            detailView.htmlLabel.text = "Description: \n\(currentProducts[indexPath.item].bodyHTML)nhk ljhi hgkl jn klkj hgj hbk hkl hkhk  j nllifel; grl gjrel g re gnrela jbren abl bna "
+            detailView.htmlLabel.text = "Description: \n\(currentProducts[indexPath.item].bodyHTML)"
         }
-        
-        
+        //Presenting the extra detailed view
         navigationController?.pushViewController(detailView, animated: true)
     }
 
