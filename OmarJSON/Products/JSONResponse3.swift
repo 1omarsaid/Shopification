@@ -16,15 +16,22 @@ struct Products: Codable {
 
 //Created a struct for the products to reference the product name and variants
 struct Product: Codable {
-    let title: String
+    let title, bodyHTML, vendor, productType, tags: String
+    let id: Int
     let variants: [Variant]
     let image: imagesrc
-
+    let updatedAt, publishedAt: String
+    
     enum CodingKeys: String, CodingKey {
-        case title
+        case title, vendor, tags
         case variants
         case image
-
+        case id
+        case updatedAt = "updated_at"
+        case publishedAt = "published_at"
+        case productType = "product_type"
+        case bodyHTML = "body_html"
+        
     }
 }
 

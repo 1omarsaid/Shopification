@@ -33,6 +33,13 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             
             self.collectionView.reloadData()
         }
+        
+        //Check if there is internet Connectivity
+        if !(Reachability.isConnectedToNetwork()) {
+            let alert = UIAlertController(title: "Error", message:"You need to enable location services to make a Post! Enable location services in settings", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
 
     }
     

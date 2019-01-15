@@ -283,11 +283,12 @@ extension ProductViewController: UICollectionViewDelegate, UICollectionViewDataS
         productName = productName.replacingOccurrences(of: "\((collectName)!)", with: "")
         //specifying the cell's name label as the edited product name
         cell.nameLabel.text = productName
+        //Setting the "out of value" parameter in the cell
+        cell.outOfLabel.text = "\(indexPath.item + 1)/\(products.count)"
         //Setting the product's image as the collection's image
-        
         let url = URL(string: "\((products[indexPath.item].image.src)!)")
-        cell.productImage.kf.indicatorType = .activity
-        cell.productImage.kf.setImage(with: url)
+//        cell.productImage.kf.indicatorType = .activity
+//        cell.productImage.kf.setImage(with: url)
         
         //Specify a background thread for the work
             DispatchQueue.global(qos: .background).async {
@@ -324,6 +325,67 @@ extension ProductViewController: UICollectionViewDelegate, UICollectionViewDataS
     //Speficying the insets of the collection cell
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print(products[indexPath.item].title)
+        let detailView = ExtraDetailViewController()
+        detailView.idLabel.text = "Id: \(products[indexPath.item].id)"
+        
+        var productName = products[indexPath.item].title
+        //Editing the product's name to remove the collection's name in the beginning
+        productName = productName.replacingOccurrences(of: "\((collectName)!)", with: "")
+        //specifying the cell's name label as the edited product name
+        detailView.nameLabel.text = "Name: \(productName)"
+        detailView.tagsLabel.text = "Tags: \(products[indexPath.item].tags)"
+        detailView.productTypeLabel.text = "Type: \(products[indexPath.item].productType)"
+        //We need to trim the date string
+        //First lets do it for the published string
+        let publishedString = "\(products[indexPath.item].publishedAt)"
+        let endIndexForPublished = publishedString.index(publishedString.endIndex, offsetBy: -15)
+        let newPublishedString = publishedString.substring(to: endIndexForPublished)
+        //Second lets do it for the Updated string
+        let updatedString = "\(products[indexPath.item].updatedAt)"
+        let endIndexForUpdate = publishedString.index(updatedString.endIndex, offsetBy: -15)
+        let newUpdatedString = publishedString.substring(to: endIndexForUpdate)
+        
+        detailView.publishLabel.text = "Published at: \(newPublishedString)"
+        detailView.updateLabel.text = "Updated at: \(newUpdatedString)"
+        detailView.dataSource = products[indexPath.item].variants
+        
+        let url = URL(string: "\((products[indexPath.item].image.src)!)")
+        //        cell.productImage.kf.indicatorType = .activity
+        //        cell.productImage.kf.setImage(with: url)
+        
+        //Specify a background thread for the work
+        DispatchQueue.global(qos: .background).async {
+            do
+            {
+                let data = try Data.init(contentsOf: url!)
+                DispatchQueue.main.async {
+                    detailView.productImage.image = UIImage(data: data)
+                }
+            }
+            catch {
+                //Specifying Alert to show user that image can not be downloaded at this time
+                let alert = UIAlertController(title: "Error", message:"Image can not be loaded at this time", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+        }
+        
+        detailView.vendorLabel.text = "Vendor: \(products[indexPath.item].vendor)"
+        
+        
+        if products[indexPath.item].bodyHTML == "" {
+            //If the description, dont do anything
+        }else {
+            //Send the text to the ExtradetailViewController
+            detailView.htmlLabel.text = "Description: \n\(products[indexPath.item].bodyHTML)nhk ljhi hgkl jn klkj hgj hbk hkl hkhk  j nllifel; grl gjrel g re gnrela jbren abl bna "
+        }
+        
+        
+        navigationController?.pushViewController(detailView, animated: true)
     }
 
 }

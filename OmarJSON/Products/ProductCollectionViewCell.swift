@@ -45,6 +45,16 @@ class ProductCollectionViewCell: UICollectionViewCell, UIPickerViewDelegate, UIP
         return label
     }()
     
+    let outOfLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+        label.text = "3/3"
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.textAlignment = .center
+        return label
+    }()
+    
     //Created an inventory label that will sit ontop of the picker view
     let inventoryLabel: UILabel = {
         let label = UILabel()
@@ -72,6 +82,7 @@ class ProductCollectionViewCell: UICollectionViewCell, UIPickerViewDelegate, UIP
         userImage.layer.masksToBounds = true
         userImage.backgroundColor = .clear
         userImage.layer.borderColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
+        userImage.backgroundColor = #colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1)
         userImage.layer.borderWidth = 3.0
         userImage.layer.cornerRadius = 20
         userImage.clipsToBounds =  true
@@ -87,6 +98,7 @@ class ProductCollectionViewCell: UICollectionViewCell, UIPickerViewDelegate, UIP
         addSubview(collectionLabel)
         addSubview(pickerView)
         addSubview(inventoryLabel)
+        addSubview(outOfLabel)
         //This is where we set the constraints
         NSLayoutConstraint.activate([
             
@@ -102,6 +114,13 @@ class ProductCollectionViewCell: UICollectionViewCell, UIPickerViewDelegate, UIP
             nameLabel.centerYAnchor.constraint(equalTo: productImage.bottomAnchor, constant: UIScreen.main.bounds.height * 0.03),
             nameLabel.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height * 0.05),
             nameLabel.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.7),
+            
+            //Out of label constraints
+            outOfLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: UIScreen.main.bounds.width * -0.07),
+            outOfLabel.topAnchor.constraint(equalTo: topAnchor, constant: UIScreen.main.bounds.height * 0.02),
+            outOfLabel.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.08),
+            outOfLabel.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.08),
+        
             
             //Collection Label constraints
             collectionLabel.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 0),

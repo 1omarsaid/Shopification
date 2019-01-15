@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		072F000D21ED303800828622 /* ExtraDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 072F000C21ED303800828622 /* ExtraDetailViewController.swift */; };
+		072F001021ED53C600828622 /* Connectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 072F000F21ED53C600828622 /* Connectivity.swift */; };
 		07D0723421E822FE00F6A216 /* JSONResponse2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D0723321E822FE00F6A216 /* JSONResponse2.swift */; };
 		07D0723921E826E600F6A216 /* ProductCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D0723821E826E600F6A216 /* ProductCollectionViewCell.swift */; };
 		07D0723B21E8271200F6A216 /* ProductViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D0723A21E8271200F6A216 /* ProductViewController.swift */; };
@@ -21,6 +23,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		072F000C21ED303800828622 /* ExtraDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtraDetailViewController.swift; sourceTree = "<group>"; };
+		072F000F21ED53C600828622 /* Connectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connectivity.swift; sourceTree = "<group>"; };
 		07D0723321E822FE00F6A216 /* JSONResponse2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONResponse2.swift; sourceTree = "<group>"; };
 		07D0723821E826E600F6A216 /* ProductCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCollectionViewCell.swift; sourceTree = "<group>"; };
 		07D0723A21E8271200F6A216 /* ProductViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewController.swift; sourceTree = "<group>"; };
@@ -50,6 +54,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		072F000B21ED301200828622 /* ExtraDetail */ = {
+			isa = PBXGroup;
+			children = (
+				072F000C21ED303800828622 /* ExtraDetailViewController.swift */,
+			);
+			path = ExtraDetail;
+			sourceTree = "<group>";
+		};
+		072F000E21ED53B100828622 /* Connectivity */ = {
+			isa = PBXGroup;
+			children = (
+				072F000F21ED53C600828622 /* Connectivity.swift */,
+			);
+			path = Connectivity;
+			sourceTree = "<group>";
+		};
 		07D0723521E8257400F6A216 /* Collections */ = {
 			isa = PBXGroup;
 			children = (
@@ -107,10 +127,12 @@
 		623C8CA321E7052D000D3154 /* OmarJSON */ = {
 			isa = PBXGroup;
 			children = (
+				072F000E21ED53B100828622 /* Connectivity */,
 				623C8CA421E7052D000D3154 /* AppDelegate.swift */,
 				07D0723521E8257400F6A216 /* Collections */,
 				07D0723621E8258700F6A216 /* Collects */,
 				07D0723721E826BD00F6A216 /* Products */,
+				072F000B21ED301200828622 /* ExtraDetail */,
 				623C8CAB21E7052F000D3154 /* Assets.xcassets */,
 				623C8CAD21E7052F000D3154 /* LaunchScreen.storyboard */,
 				623C8CB021E7052F000D3154 /* Info.plist */,
@@ -248,9 +270,11 @@
 			files = (
 				07D0723421E822FE00F6A216 /* JSONResponse2.swift in Sources */,
 				623C8CB721E7053E000D3154 /* JSONResponse.swift in Sources */,
+				072F001021ED53C600828622 /* Connectivity.swift in Sources */,
 				07D0723D21E836E100F6A216 /* JSONResponse3.swift in Sources */,
 				623C8CA721E7052D000D3154 /* ViewController.swift in Sources */,
 				07D0723B21E8271200F6A216 /* ProductViewController.swift in Sources */,
+				072F000D21ED303800828622 /* ExtraDetailViewController.swift in Sources */,
 				623C8CA521E7052D000D3154 /* AppDelegate.swift in Sources */,
 				07D0723921E826E600F6A216 /* ProductCollectionViewCell.swift in Sources */,
 				623C8CB921E8196D000D3154 /* CustomCollectionViewCell.swift in Sources */,
