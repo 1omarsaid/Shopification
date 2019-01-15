@@ -79,7 +79,7 @@ class ExtraDetailViewController: UIViewController, UIPickerViewDelegate, UIPicke
     }()
     
     var publishLabel: UILabel = {
-        let lbl = UILabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - (UIScreen.main.bounds.size.width * 0.7 / 2), y: UIScreen.main.bounds.size.height * 0.7, width: UIScreen.main.bounds.size.width * 0.7 , height: UIScreen.main.bounds.size.height * 0.03))
+        let lbl = UILabel(frame: CGRect(x: UIScreen.main.bounds.width * -0.14, y: UIScreen.main.bounds.size.height * 0.7, width: UIScreen.main.bounds.size.width * 0.7 , height: UIScreen.main.bounds.size.height * 0.03))
         lbl.numberOfLines = 0
         lbl.textColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
         lbl.textAlignment = .center
@@ -89,7 +89,7 @@ class ExtraDetailViewController: UIViewController, UIPickerViewDelegate, UIPicke
     
     
     var updateLabel: UILabel = {
-        let lbl = UILabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - (UIScreen.main.bounds.size.width * 0.7 / 2), y: UIScreen.main.bounds.size.height * 0.715, width: UIScreen.main.bounds.size.width * 0.7 , height: UIScreen.main.bounds.size.height * 0.03))
+        let lbl = UILabel(frame: CGRect(x: UIScreen.main.bounds.width * -0.15, y: UIScreen.main.bounds.size.height * 0.715, width: UIScreen.main.bounds.size.width * 0.7 , height: UIScreen.main.bounds.size.height * 0.03))
         lbl.numberOfLines = 0
         lbl.textColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
         lbl.textAlignment = .center

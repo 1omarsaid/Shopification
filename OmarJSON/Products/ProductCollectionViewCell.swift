@@ -50,7 +50,7 @@ class ProductCollectionViewCell: UICollectionViewCell, UIPickerViewDelegate, UIP
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
         label.text = "3/3"
-        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.font = UIFont.boldSystemFont(ofSize: 15)
         label.textAlignment = .center
         return label
     }()
@@ -116,10 +116,10 @@ class ProductCollectionViewCell: UICollectionViewCell, UIPickerViewDelegate, UIP
             nameLabel.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.7),
             
             //Out of label constraints
-            outOfLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: UIScreen.main.bounds.width * -0.07),
-            outOfLabel.topAnchor.constraint(equalTo: topAnchor, constant: UIScreen.main.bounds.height * 0.02),
-            outOfLabel.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.08),
-            outOfLabel.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.08),
+            outOfLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: UIScreen.main.bounds.width * -0.04),
+            outOfLabel.topAnchor.constraint(equalTo: topAnchor, constant: UIScreen.main.bounds.height * 0.01),
+            outOfLabel.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.12),
+            outOfLabel.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.12),
         
             
             //Collection Label constraints

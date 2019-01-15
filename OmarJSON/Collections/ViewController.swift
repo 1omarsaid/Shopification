@@ -19,11 +19,11 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = #colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1)
         //Setting up the user interface in the viewDidLoad
         setupUI()
         setupNavController()
-        
+        collectionView.showsVerticalScrollIndicator = false
         //Fetching the JSON from the first URL
         fetchJSON(url: jsonURL) { (response, error) in
             //Setting up the item to the response struct
@@ -108,9 +108,10 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         //Setting up the constraints for the collectin View
         NSLayoutConstraint.activate([
             collectionView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            collectionView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+//            collectionView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             collectionView.widthAnchor.constraint(equalTo: view.widthAnchor),
-            collectionView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.9),
+//            collectionView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.9),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             collectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: ((UIApplication.shared.keyWindow?.safeAreaInsets.top)! + 40))
             ])
         collectionView.backgroundColor = #colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1)
